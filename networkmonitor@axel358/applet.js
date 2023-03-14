@@ -23,11 +23,10 @@ class NetworkUsageApplet extends Applet.TextApplet {
 
         this.netload = new GTop.glibtop_netload();
 
+        //Hack: this fails the first time it's called during Cinnamon startup
         try {
-            let list = new GTop.glibtop_netlist();
-            this.devices = GTop.glibtop.get_netlist(list).filter(device => device !== "lo");
+            this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         } catch(e) {
-            this._notify(e + "")
             global.logError(e + "")
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         }
