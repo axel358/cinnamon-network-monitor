@@ -20,6 +20,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.settings.bind("refresh-interval", "refresh_interval", this.on_settings_changed);
         this.settings.bind("decimal-places", "decimal_places", this.on_settings_changed);
         this.settings.bind("hide-umbral", "hide_umbral", this.on_settings_changed);
+        this.settings.bind("display-style", "display_style", this.on_settings_changed);
 
         this.netload = new GTop.glibtop_netload();
 
@@ -61,10 +62,23 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.last_down = down
         this.last_up = up
 
-        if(total_speed > this.hide_umbral)
-            this.set_applet_label("\u21f5 " + this.formatBytes(total_speed, this.decimal_places) + "/s");
+        if(total_speed > this.hide_umbral) {
+            switch(this.display_style){
+                case "combined":
+                    this.set_applet_label("\u21f5 " + this.formatBytes(total_speed, this.decimal_places) + "/s");
+                    break;
+                case "both":
+                    this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s \u2193" + this.formatBytes(down_speed, this.decimal_places) + "/s");
+                    break;
+                case "download":
+                    this.set_applet_label("\u2193 " + this.formatBytes(down_speed, this.decimal_places) + "/s");
+                    break;
+                case "upload":
+                    this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s");
+            }
+        }
         else
-             this.set_applet_label("\u21f5 ")
+             this.set_applet_label("\u21f5")
 
         this.update_loop_id = Mainloop.timeout_add(this.refresh_interval, Lang.bind(this, this.update));
     }

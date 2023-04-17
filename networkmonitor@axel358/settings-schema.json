@@ -3,6 +3,18 @@
     "type" : "header",
     "description" : "Settings"
  },
+ "display-style" : {
+        "type": "combobox",
+        "default" : "combined",
+        "description" : "Speed display style",
+        "options" : {
+            "Combined" : "combined",
+            "Both" : "both",
+            "Download only" : "download",
+            "Upload only" : "upload"
+        },
+        "tooltip" : "Whether to show download and upload speeds separately or combined"
+  },
  "refresh-interval" : {
     "type": "spinbutton",
     "default" : 1000,
@@ -29,7 +41,7 @@
     "max" : 15000,
     "step" : 250,
     "units" : "bytes per second",
-    "description": "Hide if network traffic is less than",
-    "tooltip": "Time between data refeshes"
+    "description": "Hide speed if network traffic is less than",
+    "tooltip": "Use a compact display style if network traffic is less than the specified amount"
  }
 }
