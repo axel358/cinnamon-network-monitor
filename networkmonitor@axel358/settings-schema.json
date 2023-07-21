@@ -9,6 +9,7 @@
         "description" : "Speed display style",
         "options" : {
             "Combined" : "combined",
+            "Column" : "column",
             "Both" : "both",
             "Download only" : "download",
             "Upload only" : "upload"

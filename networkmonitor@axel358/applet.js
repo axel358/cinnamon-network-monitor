@@ -36,7 +36,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
     }
 
     on_settings_changed() {
-        this.update();
+        //this.update();
     }
 
     update() {
@@ -54,18 +54,21 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.set_applet_tooltip("Downloaded: " + this.formatBytes(down) + "\nUploaded: " + this.formatBytes(up))
 
         //Get current up and down speed in bytes
-        let down_speed = (down - this.last_down) * 1000 / this.refresh_interval
-        let up_speed = (up - this.last_up) * 1000 / this.refresh_interval
-        let total_speed = down_speed + up_speed
+        let down_speed = (down - this.last_down) / this.refresh_interval * 1000;
+        let up_speed = (up - this.last_up) / this.refresh_interval * 1000;
+        let total_speed = down_speed + up_speed;
 
         //Update last up and down
-        this.last_down = down
-        this.last_up = up
+        this.last_down = down;
+        this.last_up = up;
 
-        if(total_speed > this.hide_umbral) {
+        if(total_speed >= this.hide_umbral) {
             switch(this.display_style){
                 case "combined":
                     this.set_applet_label("\u21f5 " + this.formatBytes(total_speed, this.decimal_places) + "/s");
+                    break;
+                case "column":
+                    this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s\n\u2193 " + this.formatBytes(down_speed, this.decimal_places) + "/s");
                     break;
                 case "both":
                     this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s \u2193" + this.formatBytes(down_speed, this.decimal_places) + "/s");
@@ -78,21 +81,21 @@ class NetworkUsageApplet extends Applet.TextApplet {
             }
         }
         else
-             this.set_applet_label("\u21f5")
+             this.set_applet_label("\u21f5");
 
         this.update_loop_id = Mainloop.timeout_add(this.refresh_interval, Lang.bind(this, this.update));
     }
 
     formatBytes(bytes, decimals = 1) {
-        if (!+bytes) return '0 b'
+        if (!+bytes) return '0 b';
 
-        const k = 1024
-        const dm = decimals < 0 ? 0 : decimals
-        const sizes = ['b', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['b', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
-        const i = Math.floor(Math.log(bytes) / Math.log(k))
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`
+        return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
     }
 
     on_applet_removed_from_panel() {
