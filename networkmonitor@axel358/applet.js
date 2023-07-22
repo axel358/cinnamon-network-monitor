@@ -50,7 +50,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
             up += this.netload.bytes_out;
         }
 
-        this.set_applet_tooltip("Downloaded: " + this.formatBytes(down) + "\nUploaded: " + this.formatBytes(up))
+        this.set_applet_tooltip("<b>Downloaded: </b>" + this.formatBytes(down) + "\n<b>Uploaded: </b>" + this.formatBytes(up), true)
 
         //Get current up and down speed in bytes per second
         let down_speed = (down - this.last_down) / this.refresh_interval * 1000;
