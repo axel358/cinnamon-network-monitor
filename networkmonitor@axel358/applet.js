@@ -5,6 +5,7 @@ const St = imports.gi.St;
 const GTop = imports.gi.GTop;
 const Mainloop = imports.mainloop;
 const Settings = imports.ui.settings;
+const Tooltips = imports.ui.tooltips;
 
 class NetworkUsageApplet extends Applet.TextApplet {
 
@@ -16,6 +17,8 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.settings.bind("decimal-places", "decimal_places", this.on_settings_changed);
         this.settings.bind("hide-umbral", "hide_umbral", this.on_settings_changed);
         this.settings.bind("display-style", "display_style", this.on_settings_changed);
+
+        this._applet_tooltip._tooltip.set_style("text-align:left");
 
         this.netload = new GTop.glibtop_netload();
 
