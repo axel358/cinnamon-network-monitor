@@ -53,9 +53,13 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.set_applet_tooltip("<b>Downloaded: </b>" + this.formatBytes(down) + "\n<b>Uploaded: </b>" + this.formatBytes(up), true)
 
         //Get current up and down speed in bytes per second
-        let down_speed = (down - this.last_down) / this.refresh_interval * 1000;
-        let up_speed = (up - this.last_up) / this.refresh_interval * 1000;
-        let total_speed = down_speed + up_speed;
+        const down_speed = (down - this.last_down) / this.refresh_interval * 1000;
+        const up_speed = (up - this.last_up) / this.refresh_interval * 1000;
+        const total_speed = down_speed + up_speed;
+
+        const formatted_down_speed = this.formatBytes(down_speed, this.decimal_places) + "/s";
+        const formatted_up_speed = this.formatBytes(up_speed, this.decimal_places) + "/s";
+        const formatted_total_speed = this.formatBytes(total_speed, this.decimal_places) + "/s";
 
         //Update last up and down
         this.last_down = down;
@@ -64,19 +68,19 @@ class NetworkUsageApplet extends Applet.TextApplet {
         if(total_speed >= this.hide_umbral) {
             switch(this.display_style){
                 case "combined":
-                    this.set_applet_label("\u21f5 " + this.formatBytes(total_speed, this.decimal_places) + "/s");
+                    this.set_applet_label("\u21f5 " + formatted_total_speed);
                     break;
                 case "column":
-                    this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s\n\u2193 " + this.formatBytes(down_speed, this.decimal_places) + "/s");
+                    this.set_applet_label("\u2191 " + formatted_up_speed + "\n\u2193 " + formatted_down_speed);
                     break;
                 case "both":
-                    this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s \u2193" + this.formatBytes(down_speed, this.decimal_places) + "/s");
+                    this.set_applet_label("\u2191 " + formatted_up_speed + " \u2193" + formatted_down_speed);
                     break;
                 case "download":
-                    this.set_applet_label("\u2193 " + this.formatBytes(down_speed, this.decimal_places) + "/s");
+                    this.set_applet_label("\u2193 " + formatted_down_speed);
                     break;
                 case "upload":
-                    this.set_applet_label("\u2191 " + this.formatBytes(up_speed, this.decimal_places) + "/s");
+                    this.set_applet_label("\u2191 " + formatted_up_speed);
             }
         }
         else
