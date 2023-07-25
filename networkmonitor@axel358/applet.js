@@ -5,7 +5,8 @@ const St = imports.gi.St;
 const GTop = imports.gi.GTop;
 const Mainloop = imports.mainloop;
 const Settings = imports.ui.settings;
-const Tooltips = imports.ui.tooltips;
+const Util = imports.misc.util;
+const PopupMenu = imports.ui.popupMenu;
 
 class NetworkUsageApplet extends Applet.TextApplet {
 
@@ -18,14 +19,26 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.settings.bind("hide-umbral", "hide_umbral", this.on_settings_changed);
         this.settings.bind("display-style", "display_style", this.on_settings_changed);
 
-        this._applet_tooltip._tooltip.set_style("text-align:left");
+        this.set_applet_tooltip("Click for more details");
+
+        const menu_manager = new PopupMenu.PopupMenuManager(this);
+        this.menu = new Applet.AppletPopupMenu(this, orientation);
+        menu_manager.addMenu(this.menu);
+
+        this.info_menu_item = new PopupMenu.PopupMenuItem("Collecting data...", { reactive: false });
+        this.menu.addMenuItem(this.info_menu_item);
+        this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
+        const item = new PopupMenu.PopupMenuItem(_("Open System Monitor"));
+        item.connect('activate', () => Util.spawnCommandLine("gnome-system-monitor"));
+        this.menu.addMenuItem(item);
 
         this.netload = new GTop.glibtop_netload();
 
         //Hack: this fails the first time it's called during Cinnamon startup
         try {
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
-        } catch(e) {
+        } catch (e) {
             global.logError(e + "")
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         }
@@ -38,19 +51,20 @@ class NetworkUsageApplet extends Applet.TextApplet {
         //this.update();
     }
 
+    on_applet_clicked(event) {
+        this.menu.toggle();
+    }
+
     update() {
         //Gather network traffic on all devices
         let down = 0;
         let up = 0;
 
-        for (let i = 0; i < this.devices.length; ++i)
-        {
+        for (let i = 0; i < this.devices.length; ++i) {
             GTop.glibtop.get_netload(this.netload, this.devices[i]);
             down += this.netload.bytes_in;
             up += this.netload.bytes_out;
         }
-
-        this.set_applet_tooltip("<b>Downloaded: </b>" + this.formatBytes(down) + "\n<b>Uploaded: </b>" + this.formatBytes(up), true)
 
         //Get current up and down speed in bytes per second
         const down_speed = (down - this.last_down) / this.refresh_interval * 1000;
@@ -65,8 +79,8 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.last_down = down;
         this.last_up = up;
 
-        if(total_speed >= this.hide_umbral) {
-            switch(this.display_style){
+        if (total_speed >= this.hide_umbral) {
+            switch (this.display_style) {
                 case "combined":
                     this.set_applet_label("\u21f5 " + formatted_total_speed);
                     break;
@@ -84,7 +98,12 @@ class NetworkUsageApplet extends Applet.TextApplet {
             }
         }
         else
-             this.set_applet_label("\u21f5");
+            this.set_applet_label("\u21f5");
+
+        //Only retrieve additional info if the menu is open
+        if (this.menu.isOpen) {
+            this.info_menu_item.label.get_clutter_text().set_markup("<b>Downloaded: </b>" + this.formatBytes(down) + "\n<b>Uploaded: </b>" + this.formatBytes(up), true)
+        }
 
         this.update_loop_id = Mainloop.timeout_add(this.refresh_interval, Lang.bind(this, this.update));
     }
