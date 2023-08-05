@@ -39,7 +39,6 @@ class NetworkUsageApplet extends Applet.TextApplet {
         try {
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         } catch (e) {
-            global.logError(e + "")
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         }
 
@@ -60,11 +59,11 @@ class NetworkUsageApplet extends Applet.TextApplet {
         let down = 0;
         let up = 0;
 
-        for (let i = 0; i < this.devices.length; ++i) {
-            GTop.glibtop.get_netload(this.netload, this.devices[i]);
+        this.devices.forEach(device => {
+            GTop.glibtop.get_netload(this.netload, device);
             down += this.netload.bytes_in;
             up += this.netload.bytes_out;
-        }
+        });
 
         //Get current up and down speed in bytes per second
         const down_speed = (down - this.last_down) / this.refresh_interval * 1000;
