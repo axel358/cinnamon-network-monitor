@@ -13,7 +13,7 @@ An applet to monitor network traffic
 ```sudo apt install gir1.2-gtop-2.0 libgtop2-dev```
 
 - Fedora GNU/Linux and derivatives:
-```sudo yum install libgtop2```
+```sudo dnf install libgtop2```
 
 - Arch GNU/Linux and derivatives:
 ```sudo pacman -S libgtop```
