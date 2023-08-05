@@ -108,13 +108,14 @@ class NetworkUsageApplet extends Applet.TextApplet {
     }
 
     formatBytes(bytes, decimals = 1) {
-        if (!+bytes)
-            return '0 b';
+        if (bytes === 0)
+            return '0 B';
 
-        const sizes = ['b', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        const kilo = 1024;
+        const sizes = ["B", "KB", "MB", "GB", "TB"];
+        const index = Math.floor(Math.log(bytes) / Math.log(kilo));
 
-        return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(decimals))} ${sizes[i]}`;
+        return parseFloat((bytes / Math.pow(kilo, index)).toFixed(decimals)) + sizes[index];
     }
 
     on_applet_removed_from_panel() {
