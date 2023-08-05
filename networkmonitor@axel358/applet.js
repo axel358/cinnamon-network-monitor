@@ -39,7 +39,6 @@ class NetworkUsageApplet extends Applet.TextApplet {
         try {
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         } catch (e) {
-            global.logError(e + "")
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         }
 
@@ -60,11 +59,11 @@ class NetworkUsageApplet extends Applet.TextApplet {
         let down = 0;
         let up = 0;
 
-        for (let i = 0; i < this.devices.length; ++i) {
-            GTop.glibtop.get_netload(this.netload, this.devices[i]);
+        this.devices.forEach(device => {
+            GTop.glibtop.get_netload(this.netload, device);
             down += this.netload.bytes_in;
             up += this.netload.bytes_out;
-        }
+        });
 
         //Get current up and down speed in bytes per second
         const down_speed = (down - this.last_down) / this.refresh_interval * 1000;
@@ -87,8 +86,8 @@ class NetworkUsageApplet extends Applet.TextApplet {
                 case "column":
                     this.set_applet_label("\u2191 " + formatted_up_speed + "\n\u2193 " + formatted_down_speed);
                     break;
-                case "both":
-                    this.set_applet_label("\u2191 " + formatted_up_speed + " \u2193" + formatted_down_speed);
+                case "row":
+                    this.set_applet_label("\u2191 " + formatted_up_speed + " \u2193 " + formatted_down_speed);
                     break;
                 case "download":
                     this.set_applet_label("\u2193 " + formatted_down_speed);
@@ -109,13 +108,14 @@ class NetworkUsageApplet extends Applet.TextApplet {
     }
 
     formatBytes(bytes, decimals = 1) {
-        if (!+bytes)
-            return '0 b';
+        if (bytes === 0)
+            return '0 B';
 
-        const sizes = ['b', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        const kilo = 1024;
+        const sizes = ["B", "KB", "MB", "GB", "TB"];
+        const index = Math.floor(Math.log(bytes) / Math.log(kilo));
 
-        return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(decimals))} ${sizes[i]}`;
+        return parseFloat((bytes / Math.pow(kilo, index)).toFixed(decimals)) + " " + sizes[index];
     }
 
     on_applet_removed_from_panel() {
