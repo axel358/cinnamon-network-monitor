@@ -37,7 +37,7 @@
  },
  "hide-umbral" : {
     "type": "spinbutton",
-    "default" : 500,
+    "default" : 0,
     "min" : 0,
     "max" : 15000,
     "step" : 250,
