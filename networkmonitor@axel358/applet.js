@@ -115,7 +115,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
         const sizes = ["B", "KB", "MB", "GB", "TB"];
         const index = Math.floor(Math.log(bytes) / Math.log(kilo));
 
-        return parseFloat((bytes / Math.pow(kilo, index)).toFixed(decimals)) + sizes[index];
+        return parseFloat((bytes / Math.pow(kilo, index)).toFixed(decimals)) + " " + sizes[index];
     }
 
     on_applet_removed_from_panel() {
