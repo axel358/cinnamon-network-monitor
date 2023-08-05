@@ -12,10 +12,10 @@ An applet to monitor network traffic
 - Debian/Ubuntu and derivatives:
 ```sudo apt install gir1.2-gtop-2.0 libgtop2-dev```
 
-- Fedora GNU/Linux and derivatives:
+- Fedora and derivatives:
 ```sudo dnf install libgtop2```
 
-- Arch GNU/Linux and derivatives:
+- Archlinux and derivatives:
 ```sudo pacman -S libgtop```
 
 _You will have to restart the shell (ALT+F2 → r) after installing the dependencies._
