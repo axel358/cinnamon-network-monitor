@@ -10,7 +10,7 @@
         "options" : {
             "Combined" : "combined",
             "Column" : "column",
-            "Both" : "both",
+            "Side by side" : "row",
             "Download only" : "download",
             "Upload only" : "upload"
         },

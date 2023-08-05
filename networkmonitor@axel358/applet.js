@@ -86,7 +86,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
                 case "column":
                     this.set_applet_label("\u2191 " + formatted_up_speed + "\n\u2193 " + formatted_down_speed);
                     break;
-                case "both":
+                case "row":
                     this.set_applet_label("\u2191 " + formatted_up_speed + " \u2193" + formatted_down_speed);
                     break;
                 case "download":
