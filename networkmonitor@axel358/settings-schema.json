@@ -44,5 +44,14 @@
     "units" : "bytes per second",
     "description": "Hide speed if network traffic is less than",
     "tooltip": "Use a compact display style if network traffic is less than the specified amount"
- }
+ },
+   "font-size": {
+      "type": "spinbutton",
+      "default": 100,
+      "min": 50,
+      "max": 125,
+      "step": 5,
+      "description": "Font size",
+      "tooltip": "Label font size"
+   }
 }

@@ -26,4 +26,4 @@ _You will have to restart the shell (ALT+F2 → r) after installing the dependen
 
 ## Usage
 - Right click on the panel and select Applets
-- Add the Appletto the panel by selecting it and clicking on the bottom + button
+- Add the Applet to the panel by selecting it and clicking on the bottom + button

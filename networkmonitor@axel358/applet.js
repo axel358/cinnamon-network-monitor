@@ -18,6 +18,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
         this.settings.bind("decimal-places", "decimal_places", this.on_settings_changed);
         this.settings.bind("hide-umbral", "hide_umbral", this.on_settings_changed);
         this.settings.bind("display-style", "display_style", this.on_settings_changed);
+        this.settings.bind("font-size", "font_size", this.update_font_size);
 
         this.set_applet_tooltip("Click for more details");
 
@@ -42,6 +43,7 @@ class NetworkUsageApplet extends Applet.TextApplet {
             this.devices = GTop.glibtop.get_netlist(new GTop.glibtop_netlist()).filter(device => device !== "lo");
         }
 
+        this.update_font_size();
         this.update();
     }
 
@@ -116,6 +118,10 @@ class NetworkUsageApplet extends Applet.TextApplet {
         const index = Math.floor(Math.log(bytes) / Math.log(kilo));
 
         return parseFloat((bytes / Math.pow(kilo, index)).toFixed(decimals)) + " " + sizes[index];
+    }
+
+    update_font_size() {
+        this._applet_label.style = "font-size: " + this.font_size + "%;";
     }
 
     on_applet_removed_from_panel() {
